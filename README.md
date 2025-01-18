@@ -71,9 +71,7 @@ async def main():
 
 
 def server(debug: bool = False):
-    if debug:
-        asyncio.get_event_loop().set_debug(True)
-    asyncio.run(main())
+    asyncio.run(main(), debug=debug)
 ```
 
 And now we create a OPC UA client that reads the variable from the server and prints it to the console.
