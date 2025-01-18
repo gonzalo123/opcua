@@ -104,3 +104,19 @@ async def main():
 def client(debug: bool = False):
     asyncio.run(main(), debug=debug)
 ```
+
+In our example we are using click to create a CLI interface to run the server and the client.
+
+```bash
+# Start Redis server
+docker-compose up
+
+# Start the process that updates the variable in Redis
+python cli.py backend
+
+# Run the server
+python cli.py server
+
+# Run the client
+python cli.py client
+```
