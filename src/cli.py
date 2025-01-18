@@ -4,8 +4,8 @@ import click
 
 from commands import setup_commands
 
-for l in ['asyncua', ]:
-    logging.getLogger(l).setLevel(logging.WARNING)
+for logger_name in ['asyncua', ]:
+    logging.getLogger(logger_name).setLevel(logging.WARNING)
 
 logging.basicConfig(
     format='%(asctime)s [%(levelname)s] %(message)s',

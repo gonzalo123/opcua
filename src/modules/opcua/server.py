@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 class UserManager:
     def get_user(self, iserver, username=None, password=None, certificate=None):
-        if certificate and OPC_USERS_DB.get(username) == password:
+        if certificate and OPC_USERS_DB.get(username, False) == password:
+            logger.info(f"User '{username}' authenticated")
             return User(role=UserRole.User)
         return None
 

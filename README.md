@@ -35,6 +35,14 @@ openssl x509 -req -days 365 -in certificate.csr -signkey private_key.pem -out ce
 This OPC UA server will expose the variable that we're updating in the Redis database.
 
 ```python
+class UserManager:
+    def get_user(self, iserver, username=None, password=None, certificate=None):
+        if certificate and OPC_USERS_DB.get(username, False) == password:
+            logger.info(f"User '{username}' authenticated")
+            return User(role=UserRole.User)
+        return None
+
+
 async def main():
     server = Server(user_manager=UserManager())
     await server.init()
@@ -60,6 +68,12 @@ async def main():
                 value = int(value)
                 logger.info(f"Set value of {var} to {value}")
                 await var.write_value(value)
+
+
+def server(debug: bool = False):
+    if debug:
+        asyncio.get_event_loop().set_debug(True)
+    asyncio.run(main())
 ```
 
 And now we create a OPC UA client that reads the variable from the server and prints it to the console.
@@ -70,13 +84,15 @@ import logging
 
 from asyncua import Client
 
-from settings import OPC_ENDPOINT, OPC_CERTIFICATE, OPC_PRIVATE_KEY
+from settings import OPC_ENDPOINT, OPC_CERTIFICATE, OPC_PRIVATE_KEY, OPC_USERNAME, OPC_PASSWORD
 
 logger = logging.getLogger(__name__)
 
 
 async def main():
     c = Client(url=OPC_ENDPOINT)
+    c.set_user(OPC_USERNAME)
+    c.set_password(OPC_PASSWORD)
     await c.set_security_string(f"Basic256Sha256,SignAndEncrypt,{OPC_CERTIFICATE},{OPC_PRIVATE_KEY}")
 
     async with c:

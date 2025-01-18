@@ -1,14 +1,20 @@
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+load_dotenv(dotenv_path=BASE_DIR / 'env' / ENVIRONMENT / '.env')
 
-OPC_ENDPOINT = 'opc.tcp://0.0.0.0:4840/opcua'
-OPC_NAMESPACE = 'https://gonzalo123.com/opcua'
-OPC_USERNAME = 'username'
-OPC_PASSWORD = 'password'
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+
+OPC_ENDPOINT = os.getenv('OPC_ENDPOINT')
+OPC_NAMESPACE = os.getenv('OPC_NAMESPACE')
+OPC_USERNAME = os.getenv('OPC_USERNAME')
+OPC_PASSWORD = os.getenv('OPC_PASSWORD')
 
 OPC_USERS_DB = {
     OPC_USERNAME: OPC_PASSWORD
